@@ -1,0 +1,12 @@
+#include "contoller.h"
+
+class Model {
+ public:
+         Model(int size);
+         2차원배열 getarray(); // 현재 판을 return
+         void setArray(int x, int y); // 판에 돌을 놓는 함수
+         void modifyArray(int x, int y); // 돌을 뒤집는 함수        
+ private:
+
+};
+
