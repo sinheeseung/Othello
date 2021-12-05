@@ -62,16 +62,26 @@ bool Controller::is_Reverse() {
 	return true;
 }
 
-void Controller::Reverse() {
-
-}
-
 bool Controller::is_Continue() {
 	return true;
 }
 
 bool Controller::is_End() {
-	return true;
+	std::vector<std::vector<std::string>> arr = insModel_->getArray();
+        int one_count=0;
+        int two_count=0;
+        for (int i=0;i<arr.length();i++){
+                for( int j=0;j<arr[i].length();j++){
+                        if(arr[i][j] == "W")
+                                one_count += 1;
+                        if(arr[i][j] == "B")
+                                two_count += 1;
+                }
+        }
+	if (one_count == 0 or two_count == 0)
+		return true;
+	else
+		return false;
 }
 
 void Controller::Score() {
@@ -88,4 +98,8 @@ void Controller::Score() {
 	}
 	insView_->showMessage("Player One의 점수는 ", one_score, "입니다.");
 	insView_->showMessage("Player Two의 점수는 ", two_score, "입니다.");
+	if (one_score > two_score)
+		insView_->showMessage("Player One이 승리했습니다.");
+	else
+		insView_->showMessage("Player Two가 승리했습니다.");
 }

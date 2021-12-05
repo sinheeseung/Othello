@@ -13,13 +13,12 @@ class View;
 class Controller {
  public:
 	 Controller();
- 	 void ApplicationRun(); // ó�� ������ �����ϴ� �Լ�
-	 bool is_Possible(); // ����ڰ� ��ġ�� �������� �� ���� �� �մ� ��ġ���� Ȯ�����ִ� �Լ�
-     bool is_Reverse();// ����ڰ� ���� ������ �� ������� �� ���� �ִ��� Ȯ���ϴ� �Լ�
- 	 void Reverse(); // ���� ������ �Լ�
- 	 bool is_Continue(); //���� ���� �� �ִ� ��ġ�� �ִ��� Ȯ���ϴ� �Լ�
- 	 bool is_End(); //��� ������ ���� ���� ���
- 	 void Score(); //���� �Ǿ��� �� ���� ����ϴ� �Լ�
+ 	 void ApplicationRun(); // game main flow
+	 bool is_Possible(); // Player가 선택한 위치에 돌을 놓을 수 있는지 확인
+ 	 void Reverse(); // 돌을 뒤집는 함수
+ 	 bool is_Continue(); // Player가 돌을 놓을 수 있는곳이 있는 지확인
+ 	 bool is_End(); //종료조건 확인(판에 하나의 돌만 있는 경우)
+ 	 void Score(); //경기가 종료된 후 점수 계산
  private:
 	 Model* insModel_;
 	 View* insView_;
