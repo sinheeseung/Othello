@@ -1,29 +1,31 @@
 #include "view.h"
 #include <iostream>
+#include <stdio.h>
 #include <vector>
 #include <string>
-view::view(void) {};
+#include <tuple>
+View::View(void) {};
 
-void view::showMessage(std::string text) {
+void View::showMessage(std::string text) {
         std::cout << text << std::endl;
 }
 
-int view::InputArraySize() {
-        int size;
-        std::cin >> size;
-        return size;
+int View::InputArraySize() {
+	int size;
+	std::cin >> size;
+	return size;
 }
 
-void view::showArray(vector<vector<std::string>> arr) {
+void View::showArray(std::vector<std::vector<std::string>> arr) {
 	for (int i=0;i<arr.size(); i++){
 		for(int j=0;j<arr[i].size(); j++){
 			std::cout << arr[i][j] << " ";
 		}
-		std::cout << endl;
+		std::cout << std::endl;
 	}
 }
 
-std::tuple<int, int> inputLocation() {
+std::tuple<int, int> View::inputLocation() {
         int x, y;
         std::cin >> x >> y;
         return {x,y};
