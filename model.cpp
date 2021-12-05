@@ -33,5 +33,9 @@ void Model::setArray(int x, int y, bool is_playone) {
 }
 
 void Model::modifyArray(int x, int y) {
+       if(arr_[y][x] == "W")
+               arr_[y][x] == "B";
+       if(arr_[y][x] == "B")
+               arr_[y][x] == "W";
 
 }

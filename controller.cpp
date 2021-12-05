@@ -27,7 +27,7 @@ void Controller::ApplicationRun() {
 			int y = std::get<1>(result);
 			insModel_->setArray(x, y, true);
 			insView_->showArray(insModel_->getArray());
-			Reverse(); // 뒤집을 돌을 찾아줌
+			Reverse(true); // 뒤집을 돌을 찾아줌
 			insView_->showArray(insModel_->getArray());
 		}
 		else 
@@ -41,7 +41,7 @@ void Controller::ApplicationRun() {
                         int y = std::get<1>(result);
                         insModel_->setArray(x, y, false);
                         insView_->showArray(insModel_->getArray());
-                        Reverse(); // 뒤집을 돌을 찾아줌
+                        Reverse(false); // 뒤집을 돌을 찾아줌
                         insView_->showArray(insModel_->getArray());
                 }
                 else
@@ -58,10 +58,59 @@ bool Controller::is_Possible() {
 	return true;
 }
 
-bool Controller::is_Reverse() {
-	return true;
+void Controller::Reverse(bool is_playerone) {
+	std::vector<std::vector<std::string>> arr = insModel_->getArray();
+        for (int i=0;i<arr.length();i++){
+                for( int j=0;j<arr[i].length();j++){
+			if(is_playerone){
+				if(arr[i][j] == "B")
+					is_Reverse(i,j, is_playerone);
+			}else {
+				if(arr[i][j] == "W")
+					is_Reverse(i,j, is_playerone);
+			}
+                }
+        }
 }
-
+void is_Reverse(int i, int j, bool is_playerone){
+	std::vector<std::vector<std::string>> arr = insModel_->getArray();
+	if(is_playerone) {
+		if(i-1>=0 and j-1>=0 and i+1 < arr.length() and j+1 <arr.length()){
+			if(arr[i-1][j-1] == "W" and arr[i+1][j+1] == "W")
+				insModel_->modifyArray(i,j);
+		}
+		if(i-1>=0 and i+1 < arr.length()){
+                        if(arr[i-1][j] == "W" and arr[i+1][j] == "W")
+                                insModel_->modifyArray(i,j);
+		}
+	        if(j-1>=0 and j+1 <arr.length()){
+                        if(arr[i][j-1] == "W" and arr[i][j+1] == "W")
+                                insModel_->modifyArray(i,j);
+		}
+		if(i-1>=0 and j-1>=0 and i+1 < arr.length() and j+1 <arr.length()){
+                        if(arr[i-1][j+1] == "W" and arr[i+1][j-1] == "W")
+                                insModel_->modifyArray(i,j);
+		}
+	}
+	else {
+		if(i-1>=0 and j-1>=0 and i+1 < arr.length() and j+1 <arr.length()){
+                        if(arr[i-1][j-1] == "B" and arr[i+1][j+1] == "B")
+                                insModel_->modifyArray(i,j);
+                }
+                if(i-1>=0 and i+1 < arr.length()){
+                        if(arr[i-1][j] == "B" and arr[i+1][j] == "B")
+                                insModel_->modifyArray(i,j);
+                }
+                if(j-1>=0 and j+1 <arr.length()){
+                        if(arr[i][j-1] == "B" and arr[i][j+1] == "B")
+                                insModel_->modifyArray(i,j);
+                }
+                if(i-1>=0 and j-1>=0 and i+1 < arr.length() and j+1 <arr.length()){
+                        if(arr[i-1][j+1] == "B" and arr[i+1][j-1] == "B")
+                                insModel_->modifyArray(i,j);
+                }
+	}
+}
 bool Controller::is_Continue() {
 	return true;
 }

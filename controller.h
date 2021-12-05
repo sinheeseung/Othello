@@ -15,10 +15,11 @@ class Controller {
 	 Controller();
  	 void ApplicationRun(); // game main flow
 	 bool is_Possible(); // Player가 선택한 위치에 돌을 놓을 수 있는지 확인
- 	 void Reverse(); // 돌을 뒤집는 함수
+ 	 void Reverse(bool is_playerone); // 돌을 뒤집는 함수
  	 bool is_Continue(); // Player가 돌을 놓을 수 있는곳이 있는 지확인
  	 bool is_End(); //종료조건 확인(판에 하나의 돌만 있는 경우)
  	 void Score(); //경기가 종료된 후 점수 계산
+         void is_Reverse(int i, int j, bool is_playerone);
  private:
 	 Model* insModel_;
 	 View* insView_;
