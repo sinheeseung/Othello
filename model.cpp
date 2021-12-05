@@ -7,6 +7,7 @@
 Model::Model(void) {};
 
 void Model::init(int size){
+        size_ = size;
 	bool is_white = true;
         for (int i=0;i<size;i++){
 		std::vector<std::string> arr_1;
@@ -21,6 +22,9 @@ void Model::init(int size){
 	arr_[size/2-1][size/2] = "B";
 }
 
+int Model::getSize() {
+        return size_;
+}
 std::vector<std::vector<std::string>> Model::getArray() {
 	return arr_;
 }
