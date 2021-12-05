@@ -1,40 +1,35 @@
 #include "Model.h"
 #include <vector>
+#include <iostream>
 #include <string>
-//play one = "ㅁ"
-//play two = "*"
-Model::Model(int size) {
+//play one = "W"
+//play two = "B"
+Model::Model(void) {};
+
+void Model::init(int size){
 	bool is_white = true;
         for (int i=0;i<size;i++){
-		std::vector<string> arr_1;
+		std::vector<std::string> arr_1;
                 for( int j=0;j<size;j++){
-			if((i == size/2 or i == size/2-1) and (j == size/2 or j == size/2-1)) {
-				if (is_white){
-					arr_1[j] = "ㅁ";
-					is_white = false;
-				}
-				else {
-					arr_1[j] = "*";
-					is_white = true;
-				}
-			}
-			else
-				arr_1[j] = "O";
-
+			arr_1.push_back("O");
 		}
-		arr[i] = arr_1;
+		arr_.push_back(arr_1);
 	}
-};
+	arr_[size/2-1][size/2-1] = "W";
+	arr_[size/2][size/2] = "W";
+	arr_[size/2][size/2-1] = "B";
+	arr_[size/2-1][size/2] = "B";
+}
 
-vector<vector<std::string> Model::getarray() {
+std::vector<std::vector<std::string>> Model::getArray() {
 	return arr_;
 }
 
 void Model::setArray(int x, int y, bool is_playone) {
 	if(is_playone)
-		arr_[i][j] = "ㅁ";
+		arr_[y][x] = "W";
 	else
-		arr_[i][j] = "*";
+		arr_[y][x] = "B";
 }
 
 void Model::modifyArray(int x, int y) {
