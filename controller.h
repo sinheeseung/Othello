@@ -19,7 +19,7 @@ class Controller {
  	 void Reverse(); // ���� ������ �Լ�
  	 bool is_Continue(); //���� ���� �� �ִ� ��ġ�� �ִ��� Ȯ���ϴ� �Լ�
  	 bool is_End(); //��� ������ ���� ���� ���
- 	 int Score(); //���� �Ǿ��� �� ���� ����ϴ� �Լ�
+ 	 void Score(); //���� �Ǿ��� �� ���� ����ϴ� �Լ�
  private:
 	 Model* insModel_;
 	 View* insView_;

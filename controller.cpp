@@ -51,7 +51,7 @@ void Controller::ApplicationRun() {
 		      is_end = true;	
 
 	}while(is_end)
-	int score = Score();
+	Score();
 }
 
 bool Controller::is_Possible() {
@@ -74,6 +74,18 @@ bool Controller::is_End() {
 	return true;
 }
 
-int Controller::Score() {
-	return 0;
+void Controller::Score() {
+	std::vector<std::vector<std::string>> arr = insModel_->getArray();
+	int one_score=0;
+	int two_score=0;
+	for (int i=0;i<arr.length();i++){
+                for( int j=0;j<arr[i].length();j++){
+			if(arr[i][j] == "W")
+				one_score += 1;
+			if(arr[i][j] == "B")
+				two_score += 1;
+		}
+	}
+	insView_->showMessage("Player One의 점수는 ", one_score, "입니다.");
+	insView_->showMessage("Player Two의 점수는 ", two_score, "입니다.");
 }
