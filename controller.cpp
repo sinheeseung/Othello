@@ -8,11 +8,12 @@
 
 void ApplicationRun(); // game main flow
 bool is_Possible(); // Player가 선택한 위치에 돌을 놓을 수 있는지 확인
-void Reverse(bool is_playerone); // 돌을 뒤집는 함수
+void Reverse(int i, int j, int count, int dir, bool is_playerone); // 돌을 뒤집는 함수
 bool is_Continue(); // Player가 돌을 놓을 수 있는곳이 있는 지확인
 bool is_End(); //종료조건 확인(판에 하나의 돌만 있는 경우)
 void Score(); //경기가 종료된 후 점수 계산
 void is_Reverse(int i, int j, bool is_playerone);
+int check(int i, int j, int dir, bool is_playerone);
 
 Controller::Controller() {
         insModel_ = new Model();
@@ -39,7 +40,7 @@ void Controller::ApplicationRun() {
                                 if (x >= 0 && x < size && y >= 0 && y < size) {
                                         bool is_locatable = is_Possible(x, y, true);
                                         if (is_locatable) {
-                                                insModel_->setArray(x, y, true);
+                                                //insModel_->setArray(x, y, true);
                                                 put = true;
                                         } else {
                                                 insView_->showMessage("자신과 상대편 돌 사이에만 돌을 놓을 수 있습니다");
@@ -50,7 +51,7 @@ void Controller::ApplicationRun() {
                                         insView_->showMessage("1~"+std::to_string(size)+" 사이의 값을 입력해주세요.");
                                 }
                         } while(!put);
-                        Reverse(true); // 뒤집을 돌을 찾아줌
+                        //Reverse(true); // 뒤집을 돌을 찾아줌
                         insView_->showArray(insModel_->getArray());
                 } else 
                         insView_->showMessage("Player One이 놓을 수 있는 위치가 없습니다.");
@@ -67,7 +68,7 @@ void Controller::ApplicationRun() {
                                 if (x >= 0 && x < size && y >= 0 && y < size) {
                                         bool is_locatable = is_Possible(x, y, false);
                                         if (is_locatable) {
-                                                insModel_->setArray(x, y, false);
+                                                //insModel_->setArray(x, y, false);
                                                 put = true;
                                         } else {
                                                 insView_->showMessage("자신과 상대편 돌 사이에만 돌을 놓을 수 있습니다");
@@ -79,7 +80,7 @@ void Controller::ApplicationRun() {
                                         insView_->showMessage("1~"+std::to_string(size)+" 사이의 값을 입력해주세요.");
                                 }
                         } while(!put);
-                        Reverse(false); // 뒤집을 돌을 찾아줌
+                        //Reverse(false); // 뒤집을 돌을 찾아줌
                         insView_->showArray(insModel_->getArray());
                 } else 
                         insView_->showMessage("Player Two가 놓을 수 있는 위치가 없습니다.");
@@ -90,110 +91,133 @@ void Controller::ApplicationRun() {
         } while(!is_end);
         Score();
 }
-
+int Controller::check(int j, int i, int dir, bool is_playerone) {
+        std::vector<std::vector<std::string>> arr = insModel_->getArray();
+        int size = insModel_->getSize();
+        int count = 0;
+        while(1) {
+                switch (dir)
+                {
+                case 0:
+                //왼쪽 위
+                        j--;
+                        i--;
+                        break;
+                case 1:
+                // 위
+                        i--;
+                        break;
+                case 2:
+                //오른쪽 위
+                        j++;
+                        i--;
+                        break;
+                case 3:
+                // 왼쪽
+                        j--;
+                        break;
+                case 4:
+                //오른쪽
+                        j++;
+                        break;
+                case 5:
+                //왼족 아래
+                        j--;
+                        i++;
+                        break;
+                case 6:
+                //아래
+                        i++;
+                        break;
+                case 7:
+                //오른쪽 아래
+                        j++;
+                        i++;
+                        break;     
+                default:
+                        break;
+                }
+                if (i < 0 || j < 0 || i >= size || j >= size) break;
+                if (arr[i][j] == "O") break;
+                if (is_playerone) {
+                        if(arr[i][j] == "B"){
+                                count++;
+                        }
+                        else if(arr[i][j] == "W" && count != 0) {
+                                return count;
+                        }
+                } else {
+                        if(arr[i][j] == "W") count++;
+                        else if(arr[i][j] == "B" && count != 0) return count;
+                }
+        }
+        return 0;
+}
 bool Controller::is_Possible(int j, int i, bool is_playerone) {
 	std::vector<std::vector<std::string>> arr = insModel_->getArray();
         int size = insModel_->getSize();
-	if(is_playerone){
-		if(i-2>=0 and j-2>=0){
-                        if(arr[i-1][j-1] == "B" and arr[i-2][j-2] == "W")
-				//왼쪽 위  대각선
-                                return true;
-                }
-                if(i-2>=0){
-                        if(arr[i-1][j] == "B" and arr[i-2][j] == "W")
-				//위쪽
-                                return true;
-                }
-                if(i-2>=0 and j+2 <size){
-                        if(arr[i-1][j+1] == "B" and arr[i-2][j+2] == "W")
-				//오른쪽 위 대각선
-                                return true;
-                }
-                if(j-2>=0){
-                        if(arr[i][j-1] == "B" and arr[i][j-2] == "W")
-				//왼쪽
-                                return true;
-                }
-		if(i+2<size and j+2<size){
-                        if(arr[i+1][j+1] == "B" and arr[i+2][j+2] == "W")
-				//오른쪽 아래 대각선
-                                return true;
-                }
-                if(i+2<size){
-                        if(arr[i+1][j] == "B" and arr[i+2][j] == "W")
-				//아래쪽
-                                return true;
-                }
-                if(i+2<size and j-2 >=0){
-                        if(arr[i+1][j-1] == "B" and arr[i+2][j-2] == "W")
-				//왼쪽 아래 대각선
-                                return true;
-                }
-                if(j+2<size){
-                        if(arr[i][j+1] == "B" and arr[i][j+2] == "W")
-				//오른쪽
-                                return true;
-                }
-	}
-	else{
-                if(i-2>=0 and j-2>=0){
-                        if(arr[i-1][j-1] == "W" and arr[i-2][j-2] == "B")
-                                //왼쪽 위  대각선
-                                return true;
-                }
-                if(i-2>=0){
-                        if(arr[i-1][j] == "W" and arr[i-2][j] == "B")
-                                //위쪽
-                                return true;
-                }
-                if(i-2>=0 and j+2 <size){
-                        if(arr[i-1][j+1] == "W" and arr[i-2][j+2] == "B")
-                                //오른쪽 위 대각선
-                                return true;
-                }
-                if(j-2>=0){
-                        if(arr[i][j-1] == "W" and arr[i][j-2] == "B")
-                                //왼쪽
-                                return true;
-                }
-                if(i+2<size and j+2<size){
-                        if(arr[i+1][j+1] == "W" and arr[i+2][j+2] == "B")
-                                //오른쪽 아래 대각선
-                                return true;
-                }
-                if(i+2<size){
-                        if(arr[i+1][j] == "W" and arr[i+2][j] == "B")
-                                //아래쪽
-                                return true;
-                }
-                if(i+2<size and j-2 >=0){
-                        if(arr[i+1][j-1] == "W" and arr[i+2][j-2] == "B")
-                                //왼쪽 아래 대각선
-                                return true;
-                }
-                if(j+2<size){
-                        if(arr[i][j+1] == "W" and arr[i][j+2] == "B")
-                                //오른쪽
-                                return true;
+        if (arr[i][j] != "O") return false;
+        
+	
+        for (int dir = 0; dir < 8; dir++) {
+                int count = check(j, i, dir, is_playerone);
+                if (count > 0) {
+                        insModel_->setArray(j, i, is_playerone);
+                        Reverse(j, i, count, dir, is_playerone);
+                        return true;
                 }
         }
-	return false;
+        return false;
 }
 
-void Controller::Reverse(bool is_playerone) {
+void Controller::Reverse(int j, int i, int count, int dir, bool is_playerone) {
 	std::vector<std::vector<std::string>> arr = insModel_->getArray();
         int size = insModel_->getSize();
-        for (int i=0;i<size;i++){
-                for( int j=0;j<size;j++){
-			if(is_playerone){
-				if(arr[i][j] == "B")
-					is_Reverse(i,j, is_playerone);
-			}else {
-				if(arr[i][j] == "W")
-					is_Reverse(i,j, is_playerone);
-			}
+        int reverse = 0;
+        while(reverse < count) {
+                switch (dir)
+                {
+                case 0:
+                //왼쪽 위
+                        j--;
+                        i--;
+                        break;
+                case 1:
+                // 위
+                        i--;
+                        break;
+                case 2:
+                //오른쪽 위
+                        j++;
+                        i--;
+                        break;
+                case 3:
+                // 왼쪽
+                        j--;
+                        break;
+                case 4:
+                //오른쪽
+                        j++;
+                        break;
+                case 5:
+                //왼족 아래
+                        j--;
+                        i++;
+                        break;
+                case 6:
+                //아래
+                        i++;
+                        break;
+                case 7:
+                //오른쪽 아래
+                        j++;
+                        i++;
+                        break;     
+                default:
+                        break;
                 }
+                insModel_->modifyArray(i,j);
+                reverse++;
         }
 }
 void Controller::is_Reverse(int i, int j, bool is_playerone){
