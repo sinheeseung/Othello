@@ -13,7 +13,7 @@ class Model {
          std::vector<std::vector<std::string>> getArray();
          int getSize();
          void setArray(int x, int y, bool is_playone);
-         void modifyArray(int x, int y);        
+         void modifyArray(int x, int y);
  private:
          std::vector<std::vector<std::string>> arr_;
          int size_;

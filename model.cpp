@@ -1,3 +1,6 @@
+/*!
+ *     Copyright:  Copyright (c) 2021, HeeSeung.me
+ */
 #include <vector>
 #include <iostream>
 #include <string>
@@ -36,8 +39,8 @@ void Model::setArray(int x, int y, bool is_playone) {
                 arr_[y][x] = "B";
 }
 
-void Model::modifyArray (int y, int x) {
-	if (arr_[y][x] == "W") {
+void Model::modifyArray(int y, int x) {
+    if (arr_[y][x] == "W") {
                arr_[y][x] = "B";
                return;
        }

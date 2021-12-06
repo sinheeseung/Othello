@@ -1,3 +1,6 @@
+/*!
+ *     Copyright:  Copyright (c) 2021, HeeSeung.me
+ */
 #include <iostream>
 #include <vector>
 #include <string>
