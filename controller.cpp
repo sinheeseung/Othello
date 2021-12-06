@@ -1,3 +1,6 @@
+/*!
+ *     Copyright:  Copyright (c) 2021, HeeSeung.me
+ */
 #include <iostream>
 #include <vector>
 #include <string>
@@ -6,13 +9,32 @@
 #include "model.h"
 #include "view.h"
 
-void ApplicationRun();  // game main flow
-bool is_Possible();  // Player가 선택한 위치에 돌을 놓을 수 있는지 확인
-void Reverse(int i, int j, int count, int dir, bool is_playerone);  // 돌을 뒤집는 함수
-bool is_Continue();  // Player가 돌을 놓을 수 있는곳이 있는 지확인
-bool is_End();  //종료조건 확인(판에 하나의 돌만 있는 경우)
-void Score();  //경기가 종료된 후 점수 계산
-std::tuple<int, int> is_Reverse(int i, int j, int dir);
+void ApplicationRun();
+// game main flow
+bool is_Possible();
+// Player가 선택한 위치에 돌을 놓을 수 있는지 확인
+void Reverse();
+// 돌을 뒤집는 함수
+bool is_Continue();
+// Player가 돌을 놓을 수 있는곳이 있는 지확인
+bool is_End();
+//종료조건 확인(판에 하나의 돌만 있는 경우)
+void Score();
+//경기가 종료된 후 점수 계산
+std::tuple<int, int> is_Reverse();
+
+const char* initMessage = "오델로 판의 크기를 입려해주세요";
+const char* playerone = "Player One이 놓을 돌의 위치를 입력하시오: (x y)";
+const char* playertwo = "Player Two가 놓을 돌의 위치를 입력하시오: (x y)";
+const char* errormsg1 = "자신과 상대편 돌 사이에만 돌을 놓을 수 있습니다";
+const char* errormsg2 = "잘못된 범위의 값을 입력하였습니다.";
+const char* errormsg3 = " 사이의 값을 입력해주세요.";
+const char* errormsg4 = "Player One이 놓을 수 있는 위치가 없습니다.";
+const char* errormsg5 = "Player Two가 놓을 수 있는 위치가 없습니다.";
+const char* scoremsg1 = "Player One의 점수는 ";
+const char* scoremsg2 = "Player Two의 점수는 ";
+const char* win1 = "Player One이 승리했습니다.";
+const char* win2 = "Player Two가 승리했습니다.";
 int check(int i, int j, int dir, bool is_playerone);
 
 Controller::Controller() {
@@ -21,7 +43,7 @@ Controller::Controller() {
 }
 
 void Controller::ApplicationRun() {
-        insView_->showMessage("오델로 판의 크기를 입려해주세요");
+        insView_->showMessage(initMessage);
         int size = insView_->InputArraySize();
         insModel_->init(size);
         insView_->showArray(insModel_->getArray());
@@ -33,55 +55,63 @@ void Controller::ApplicationRun() {
                 if (is_possible) {
                         do {
                                 insView_->showMessage("");
-                                insView_->showMessage("Player One이 놓을 돌의 위치를 입력하시오: (x y)");
-                                std::tuple<int, int> result = insView_->inputLocation();
+                                insView_->showMessage(playerone);
+                                std::tuple<int, int> result =
+                                  insView_->inputLocation();
                                 int x = std::get<0>(result) - 1;
                                 int y = std::get<1>(result) - 1;
                                 if (x >= 0 && x < size && y >= 0 && y < size) {
-                                        bool is_locatable = is_Possible(x, y, true, false);
+                                        bool is_locatable =
+                                          is_Possible(x, y, true, false);
                                         if (is_locatable) {
                                                 put = true;
                                         } else {
-                                                insView_->showMessage("자신과 상대편 돌 사이에만 돌을 놓을 수 있습니다");
+                                                insView_->
+                                                  showMessage(errormsg1);
                                         }
                                 } else {
                                         put = false;
-                                        insView_->showMessage("잘못된 범위의 값을 입력하였습니다.");
-                                        insView_->showMessage("1~"+std::to_string(size)+" 사이의 값을 입력해주세요.");
+                                        insView_->showMessage(errormsg2);
+                                        insView_->showMessage("1~"+std::
+                                          to_string(size) + errormsg3);
                                 }
                         } while (!put);
                         insView_->showArray(insModel_->getArray());
-                } else
-                        insView_->showMessage("Player One이 놓을 수 있는 위치가 없습니다.");
-
+                } else {
+                       insView_->showMessage(errormsg4);
+                }
                 is_possible = is_Continue(false);
                 put = false;
                 if (is_possible) {
                         do {
                                 insView_->showMessage("");
-                                insView_->showMessage("Player Two가 놓을 돌의 위치를 입력하시오: (x y)");
-                                std::tuple<int, int> result = insView_->inputLocation();
+                                insView_->showMessage(playertwo);
+                                std::tuple<int, int> result =
+                                      insView_->inputLocation();
                                 int x = std::get<0>(result) - 1;
                                 int y = std::get<1>(result) - 1;
                                 if (x >= 0 && x < size && y >= 0 && y < size) {
-                                        bool is_locatable = is_Possible(x, y, false, false);
+                                        bool is_locatable =
+                                           is_Possible(x, y, false, false);
                                         if (is_locatable) {
                                                put = true;
                                         } else {
-                                                insView_->showMessage("자신과 상대편 돌 사이에만 돌을 놓을 수 있습니다");
+                                                insView_->
+                                                  showMessage(errormsg1);
                                         }
-                                }
-                                else {
+                                } else {
                                         put = false;
-                                        insView_->showMessage("잘못된 범위의 값을 입력하였습니다.");
-                                        insView_->showMessage("1~"+std::to_string(size)+" 사이의 값을 입력해주세요.");
+                                        insView_->showMessage(errormsg2);
+                                        insView_->showMessage("1~" + std::
+                                          to_string(size) + errormsg3);
                                 }
                         } while (!put);
                         insView_->showArray(insModel_->getArray());
-                } else
-                        insView_->showMessage("Player Two가 놓을 수 있는 위치가 없습니다.");
-
-                if ((is_Continue(true) == false && is_Continue(false) == false) || is_End())
+                } else {
+                       insView_->showMessage(errormsg5);
+                }
+                if ((is_Continue(true) == false
+                      && is_Continue(false) == false) || is_End())
                         is_end = true;
         } while (!is_end);
         Score();
@@ -222,18 +252,20 @@ void Controller::Score() {
         int size = insModel_->getSize();
         int one_score = 0;
         int two_score = 0;
-        for (int i = 0; i < size; i++){
-                for( int j = 0; j < size; j++){
+        for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
                         if (arr[i][j] == "W")
                                 one_score += 1;
                         if (arr[i][j] == "B")
                                 two_score += 1;
                 }
         }
-        insView_->showMessage("Player One의 점수는 " + std::to_string(one_score) +  "입니다.");
-        insView_->showMessage("Player Two의 점수는 " + std::to_string(two_score) + "입니다.");
+        insView_->showMessage(scoremsg1 +
+                std::to_string(one_score) +  "입니다.");
+        insView_->showMessage(scoremsg2 +
+                std::to_string(two_score) + "입니다.");
         if (one_score > two_score)
-                insView_->showMessage("Player One이 승리했습니다.");
+                insView_->showMessage(win1);
         else
-                insView_->showMessage("Player Two가 승리했습니다.");
+                insView_->showMessage(win2);
 }
