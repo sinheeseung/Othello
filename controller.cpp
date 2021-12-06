@@ -1,10 +1,10 @@
-#include "controller.h"
-#include "model.h"
-#include "view.h"
 #include <iostream>
 #include <vector>
 #include <string>
 #include <tuple>
+#include "controller.h"
+#include "model.h"
+#include "view.h"
 
 void ApplicationRun(); // game main flow
 bool is_Possible(); // Player가 선택한 위치에 돌을 놓을 수 있는지 확인
@@ -15,86 +15,80 @@ void Score(); //경기가 종료된 후 점수 계산
 void is_Reverse(int i, int j, bool is_playerone);
 
 Controller::Controller() {
-	insModel_ = new Model();
-	insView_ = new View();
-};
+        insModel_ = new Model();
+        insView_ = new View();
+}
 
 void Controller::ApplicationRun() {
-	insView_->showMessage("오델로 판의 크기를 입려해주세요");
-	int size = insView_->InputArraySize();
-	insModel_->init(size);
-	insView_->showArray(insModel_->getArray());
-	bool is_end = false;
-	do {
-		//놓을 수 있는 곳이 있는지 확인
-		bool is_possible = is_Continue(true);
-		bool put = false;
-		if (is_possible) {
-			do{
-				insView_->showMessage("");
-				insView_->showMessage("Player One이 놓을 돌의 위치를 입력하시오: (x y)");
-				std::tuple<int, int> result = insView_->inputLocation();
-				int x = std::get<0>(result) - 1;
-				int y = std::get<1>(result) - 1;
-				if (x >= 0 and x < size and y >= 0 and y < size) {
-					bool is_locatable = is_Possible(x, y, true);
-					if (is_locatable) {
-						insModel_->setArray(x, y, true);
-						//insView_->showArray(insModel_->getArray());
-						put = true;
-					}
-					else {
-						insView_->showMessage("자신과 상대편 돌 사이에만 돌을 놓을 수 있습니다");
-					}
-				}
-				else {
-					put = false;
-					insView_->showMessage("잘못된 범위의 값을 입력하였습니다.");
-					insView_->showMessage("1~"+std::to_string(size)+" 사이의 값을 입력해주세요.");
-				}
-			} while(!put);
-			Reverse(true); // 뒤집을 돌을 찾아줌
-			insView_->showArray(insModel_->getArray());
-		}
-		else 
-			insView_->showMessage("Player One이 놓을 수 있는 위치가 없습니다.");
+        insView_->showMessage("오델로 판의 크기를 입려해주세요");
+        int size = insView_->InputArraySize();
+        insModel_->init(size);
+        insView_->showArray(insModel_->getArray());
+        bool is_end = false;
+        do {
+                //놓을 수 있는 곳이 있는지 확인
+                bool is_possible = is_Continue(true);
+                bool put = false;
+                if (is_possible) {
+                        do{
+                                insView_->showMessage("");
+                                insView_->showMessage("Player One이 놓을 돌의 위치를 입력하시오: (x y)");
+                                std::tuple<int, int> result = insView_->inputLocation();
+                                int x = std::get<0>(result) - 1;
+                                int y = std::get<1>(result) - 1;
+                                if (x >= 0 && x < size && y >= 0 && y < size) {
+                                        bool is_locatable = is_Possible(x, y, true);
+                                        if (is_locatable) {
+                                                insModel_->setArray(x, y, true);
+                                                put = true;
+                                        } else {
+                                                insView_->showMessage("자신과 상대편 돌 사이에만 돌을 놓을 수 있습니다");
+                                        }
+                                } else {
+                                        put = false;
+                                        insView_->showMessage("잘못된 범위의 값을 입력하였습니다.");
+                                        insView_->showMessage("1~"+std::to_string(size)+" 사이의 값을 입력해주세요.");
+                                }
+                        } while(!put);
+                        Reverse(true); // 뒤집을 돌을 찾아줌
+                        insView_->showArray(insModel_->getArray());
+                } else 
+                        insView_->showMessage("Player One이 놓을 수 있는 위치가 없습니다.");
 
                 is_possible = is_Continue(false);
-		put = false;
-		if (is_possible) {
-			do{
-				insView_->showMessage("");
-				insView_->showMessage("Player Two가 놓을 돌의 위치를 입력하시오: (x y)");
-				std::tuple<int, int> result = insView_->inputLocation();
-				int x = std::get<0>(result) - 1;
-				int y = std::get<1>(result) - 1;
-				if (x >= 0 and x < size and y >= 0 and y < size) {
-					bool is_locatable = is_Possible(x, y, false);
-					if (is_locatable) {
-						insModel_->setArray(x, y, false);
-						put = true;
-					}
-					else {
-						insView_->showMessage("자신과 상대편 돌 사이에만 돌을 놓을 수 있습니다");
-					}
-				}
-				else {
-					put = false;
-					insView_->showMessage("잘못된 범위의 값을 입력하였습니다.");
-					insView_->showMessage("1~"+std::to_string(size)+" 사이의 값을 입력해주세요.");
-				}
-			} while(!put);
-			Reverse(false); // 뒤집을 돌을 찾아줌
-			insView_->showArray(insModel_->getArray());
-		}
-		else 
-			insView_->showMessage("Player Two가 놓을 수 있는 위치가 없습니다.");
+                put = false;
+                if (is_possible) {
+                        do{
+                                insView_->showMessage("");
+                                insView_->showMessage("Player Two가 놓을 돌의 위치를 입력하시오: (x y)");
+                                std::tuple<int, int> result = insView_->inputLocation();
+                                int x = std::get<0>(result) - 1;
+                                int y = std::get<1>(result) - 1;
+                                if (x >= 0 && x < size && y >= 0 && y < size) {
+                                        bool is_locatable = is_Possible(x, y, false);
+                                        if (is_locatable) {
+                                                insModel_->setArray(x, y, false);
+                                                put = true;
+                                        } else {
+                                                insView_->showMessage("자신과 상대편 돌 사이에만 돌을 놓을 수 있습니다");
+                                        }
+                                }
+                                else {
+                                        put = false;
+                                        insView_->showMessage("잘못된 범위의 값을 입력하였습니다.");
+                                        insView_->showMessage("1~"+std::to_string(size)+" 사이의 값을 입력해주세요.");
+                                }
+                        } while(!put);
+                        Reverse(false); // 뒤집을 돌을 찾아줌
+                        insView_->showArray(insModel_->getArray());
+                } else 
+                        insView_->showMessage("Player Two가 놓을 수 있는 위치가 없습니다.");
 
-		if ((is_Continue(true) == false and is_Continue(false) == false) or is_End())
-		      is_end = true;	
+                if ((is_Continue(true) == false && is_Continue(false) == false) or is_End())
+                        is_end = true;	
 
-	}while(!is_end);
-	Score();
+        } while(!is_end);
+        Score();
 }
 
 bool Controller::is_Possible(int j, int i, bool is_playerone) {
