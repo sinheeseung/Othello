@@ -12,7 +12,7 @@ void Reverse(int i, int j, int count, int dir, bool is_playerone); // 돌을 뒤
 bool is_Continue(); // Player가 돌을 놓을 수 있는곳이 있는 지확인
 bool is_End(); //종료조건 확인(판에 하나의 돌만 있는 경우)
 void Score(); //경기가 종료된 후 점수 계산
-void is_Reverse(int i, int j, bool is_playerone);
+std::tuple<int, int> is_Reverse(int i, int j, int dir);
 int check(int i, int j, int dir, bool is_playerone);
 
 Controller::Controller() {
@@ -38,7 +38,7 @@ void Controller::ApplicationRun() {
                                 int x = std::get<0>(result) - 1;
                                 int y = std::get<1>(result) - 1;
                                 if (x >= 0 && x < size && y >= 0 && y < size) {
-                                        bool is_locatable = is_Possible(x, y, true);
+                                        bool is_locatable = is_Possible(x, y, true, false);
                                         if (is_locatable) {
                                                 //insModel_->setArray(x, y, true);
                                                 put = true;
@@ -66,7 +66,7 @@ void Controller::ApplicationRun() {
                                 int x = std::get<0>(result) - 1;
                                 int y = std::get<1>(result) - 1;
                                 if (x >= 0 && x < size && y >= 0 && y < size) {
-                                        bool is_locatable = is_Possible(x, y, false);
+                                        bool is_locatable = is_Possible(x, y, false, false);
                                         if (is_locatable) {
                                                 //insModel_->setArray(x, y, false);
                                                 put = true;
@@ -96,47 +96,9 @@ int Controller::check(int j, int i, int dir, bool is_playerone) {
         int size = insModel_->getSize();
         int count = 0;
         while(1) {
-                switch (dir)
-                {
-                case 0:
-                //왼쪽 위
-                        j--;
-                        i--;
-                        break;
-                case 1:
-                // 위
-                        i--;
-                        break;
-                case 2:
-                //오른쪽 위
-                        j++;
-                        i--;
-                        break;
-                case 3:
-                // 왼쪽
-                        j--;
-                        break;
-                case 4:
-                //오른쪽
-                        j++;
-                        break;
-                case 5:
-                //왼족 아래
-                        j--;
-                        i++;
-                        break;
-                case 6:
-                //아래
-                        i++;
-                        break;
-                case 7:
-                //오른쪽 아래
-                        j++;
-                        i++;
-                        break;     
-                default:
-                        break;
-                }
+                std::tuple<int, int> result = is_Reverse(i, j, dir);
+                i = std::get<0>(result);
+                j = std::get<1>(result);
                 if (i < 0 || j < 0 || i >= size || j >= size) break;
                 if (arr[i][j] == "O") break;
                 if (is_playerone) {
@@ -153,17 +115,17 @@ int Controller::check(int j, int i, int dir, bool is_playerone) {
         }
         return 0;
 }
-bool Controller::is_Possible(int j, int i, bool is_playerone) {
+bool Controller::is_Possible(int j, int i, bool is_playerone, bool is_con) {
 	std::vector<std::vector<std::string>> arr = insModel_->getArray();
         int size = insModel_->getSize();
         if (arr[i][j] != "O") return false;
-        
-	
         for (int dir = 0; dir < 8; dir++) {
                 int count = check(j, i, dir, is_playerone);
                 if (count > 0) {
-                        insModel_->setArray(j, i, is_playerone);
-                        Reverse(j, i, count, dir, is_playerone);
+                        if (!is_con) {
+                                insModel_->setArray(j, i, is_playerone);
+                                Reverse(j, i, count, dir, is_playerone);
+                        }
                         return true;
                 }
         }
@@ -175,26 +137,34 @@ void Controller::Reverse(int j, int i, int count, int dir, bool is_playerone) {
         int size = insModel_->getSize();
         int reverse = 0;
         while(reverse < count) {
-                switch (dir)
-                {
-                case 0:
-                //왼쪽 위
-                        j--;
-                        i--;
-                        break;
-                case 1:
-                // 위
-                        i--;
-                        break;
-                case 2:
-                //오른쪽 위
-                        j++;
-                        i--;
-                        break;
-                case 3:
-                // 왼쪽
-                        j--;
-                        break;
+                std::tuple<int, int> result = is_Reverse(i, j, dir);
+                i = std::get<0>(result);
+                j = std::get<1>(result);
+                insModel_->modifyArray(i,j);
+                reverse++;
+        }
+}
+std::tuple<int, int> Controller::is_Reverse(int i, int j, int dir){
+	switch (dir)
+        {
+        case 0:
+        //왼쪽 위
+                j--;
+                i--;
+                break;
+        case 1:
+         // 위
+                i--;
+                break;
+        case 2:
+        //오른쪽 위
+                j++;
+                i--;
+                break;
+         case 3:
+        // 왼쪽
+                j--;
+                break;
                 case 4:
                 //오른쪽
                         j++;
@@ -216,51 +186,23 @@ void Controller::Reverse(int j, int i, int count, int dir, bool is_playerone) {
                 default:
                         break;
                 }
-                insModel_->modifyArray(i,j);
-                reverse++;
-        }
-}
-void Controller::is_Reverse(int i, int j, bool is_playerone){
-	std::vector<std::vector<std::string>> arr = insModel_->getArray();
-	int size = insModel_->getSize();
-	if(is_playerone) {
-		if(i-1>=0 and j-1>=0 and i+1 < size and j+1 <size){
-			if(arr[i-1][j-1] == "W" and arr[i+1][j+1] == "W")
-				insModel_->modifyArray(i,j);
-		}
-		if(i-1>=0 and i+1 < size){
-                        if(arr[i-1][j] == "W" and arr[i+1][j] == "W")
-                                insModel_->modifyArray(i,j);
-		}
-	        if(j-1>=0 and j+1 <size){
-                        if(arr[i][j-1] == "W" and arr[i][j+1] == "W")
-                                insModel_->modifyArray(i,j);
-		}
-		if(i-1>=0 and j-1>=0 and i+1 < size and j+1 <size){
-                        if(arr[i-1][j+1] == "W" and arr[i+1][j-1] == "W")
-                                insModel_->modifyArray(i,j);
-		}
-	} else {
-		if(i-1>=0 and j-1>=0 and i+1 < size and j+1 <size){
-                        if(arr[i-1][j-1] == "B" and arr[i+1][j+1] == "B")
-                                insModel_->modifyArray(i,j);
-                }
-                if(i-1>=0 and i+1 < size){
-                        if(arr[i-1][j] == "B" and arr[i+1][j] == "B")
-                                insModel_->modifyArray(i,j);
-                }
-                if(j-1>=0 and j+1 <size){
-                        if(arr[i][j-1] == "B" and arr[i][j+1] == "B")
-                                insModel_->modifyArray(i,j);
-                }
-                if(i-1>=0 and j-1>=0 and i+1 < size and j+1 <size){
-                        if(arr[i-1][j+1] == "B" and arr[i+1][j-1] == "B")
-                                insModel_->modifyArray(i,j);
-                }
-	}
+        return {i, j};
 }
 bool Controller::is_Continue(bool is_playerone) {
-	return true;
+	std::vector<std::vector<std::string>> arr = insModel_->getArray();
+        int size = insModel_->getSize();
+        bool ret;
+        for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                        if (arr[i][j] == "O") {
+                                ret = is_Possible(i, j, is_playerone, true);
+                                if (ret){
+                                        return true;
+                                }        
+                        }
+                }
+        }
+        return false;
 }
 
 bool Controller::is_End() {
