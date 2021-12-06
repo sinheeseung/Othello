@@ -204,7 +204,6 @@ void Controller::Reverse(bool is_playerone) {
 }
 void Controller::is_Reverse(int i, int j, bool is_playerone){
 	std::vector<std::vector<std::string>> arr = insModel_->getArray();
-	std::cout << i << j << std::endl;
 	int size = insModel_->getSize();
 	if(is_playerone) {
 		if(i-1>=0 and j-1>=0 and i+1 < size and j+1 <size){

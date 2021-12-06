@@ -38,11 +38,11 @@ void Model::setArray(int x, int y, bool is_playone) {
 
 void Model::modifyArray(int y, int x) {
        if(arr_[y][x] == "W") {
-	       std::cout << "a" << std::endl;
                arr_[y][x] = "B";
+	       return ;
        }
        if(arr_[y][x] == "B"){
-	       std::cout << "b" << std::endl;
                arr_[y][x] = "W";
+	       return ;
        }
 }
