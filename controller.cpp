@@ -35,6 +35,7 @@ const char* scoremsg1 = "Player One의 점수는 ";
 const char* scoremsg2 = "Player Two의 점수는 ";
 const char* win1 = "Player One이 승리했습니다.";
 const char* win2 = "Player Two가 승리했습니다.";
+const char* draw = "무승부입니다.";
 int check(int i, int j, int dir, bool is_playerone);
 
 Controller::Controller() {
@@ -142,18 +143,20 @@ int Controller::check(int j, int i, int dir, bool is_playerone) {
 bool Controller::is_Possible(int j, int i, bool is_playerone, bool is_con) {
         std::vector<std::vector<std::string>> arr = insModel_->getArray();
         int size = insModel_->getSize();
-        if (arr[i][j] != "O") return false;
+        bool is_reverse = false;
         for (int dir = 0; dir < 8; dir++) {
                 int count = check(j, i, dir, is_playerone);
                 if (count > 0) {
                         if (!is_con) {
                                 insModel_->setArray(j, i, is_playerone);
                                 Reverse(j, i, count, dir, is_playerone);
+                                is_reverse = true;
+                        } else { 
+                                return true;
                         }
-                        return true;
                 }
         }
-        return false;
+        return is_reverse;
 }
 
 void Controller::Reverse(int j, int i, int count, int dir, bool is_playerone) {
@@ -266,6 +269,8 @@ void Controller::Score() {
                 std::to_string(two_score) + "입니다.");
         if (one_score > two_score)
                 insView_->showMessage(win1);
-        else
+        else if (one_score < two_score)
                 insView_->showMessage(win2);
+        else
+                insView_->showMessage(draw);
 }
