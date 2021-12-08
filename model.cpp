@@ -32,7 +32,7 @@ std::vector<std::vector<std::string>> Model::getArray() {
         return arr_;
 }
 
-void Model::setArray(int x, int y, bool is_playone) {
+void Model::setArray(int y, int x, bool is_playone) {
         if (is_playone)
                 arr_[y][x] = "W";
         else
