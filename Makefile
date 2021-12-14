@@ -46,7 +46,7 @@ main : main.cpp controller.o model.o view.o $(GTEST_HEADERS)
 test.o : test.cpp $(GTEST_HEADERS)
 	g++ $(CPPFLAGS) $(CXXFLAGS) --std=c++17 -c test.cpp -o $@
 
-test : test.o node.o gtest_main.a
+test : test.o controller.o model.o view.o gtest_main.a
 	g++ $(CPPFLAGS) $(CXXFLAGS) --std=c++17 $^ -o $@
 
 .PHONY: all clean 

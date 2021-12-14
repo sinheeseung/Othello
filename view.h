@@ -1,8 +1,8 @@
 /*!
  *     Copyright:  Copyright (c) 2021, HeeSeung.me
  */
-#ifndef DESKTOP_OTHELLO_VIEW_H_
-#define DESKTOP_OTHELLO_VIEW_H_
+#ifndef DESKTOP_OBJECT_ORIENTED_DESIGN_OTHELLO_VIEW_H_
+#define DESKTOP_OBJECT_ORIENTED_DESIGN_OTHELLO_VIEW_H_
 #include <vector>
 #include <string>
 #include <tuple>
@@ -15,4 +15,4 @@ class View {
          void showArray(std::vector<std::vector<std::string>> arr);
          std::tuple<int, int> inputLocation();
 };
-#endif  // DESKTOP_OTHELLO_VIEW_H_
+#endif  // DESKTOP_OBJECT_ORIENTED_DESIGN_OTHELLO_VIEW_H_

@@ -1,8 +1,8 @@
 /*!
  *     Copyright:  Copyright (c) 2021, HeeSeung.me
  */
-#ifndef DESKTOP_OTHELLO_CONTROLLER_H_
-#define DESKTOP_OTHELLO_CNOTROLLER_H_
+#ifndef DESKTOP_OBJECT_ORIENTED_DESIGN_OTHELLO_CONTROLLER_H_
+#define DESKTOP_OBJECT_ORIENTED_DESIGN_OTHELLO_CONTROLLER_H_
 #pragma once
 #include <tuple>
 #include "model.h"
@@ -28,7 +28,8 @@ class Controller {
          //경기가 종료된 후 점수 계산
          std::tuple<int, int> is_Reverse(int i, int j, int dir);
  private:
+         Controller* insController_;
          Model* insModel_;
          View* insView_;
 };
-#endif  // DESKTOP_OTHELLO_CNOTROLLER_H_
+#endif  // DESKTOP_OBJECT_ORIENTED_DESIGN_OTHELLO_CONTROLLER_H_

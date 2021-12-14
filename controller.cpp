@@ -145,28 +145,21 @@ void Controller::ApplicationRun() {
         } while (!is_end);
         Score();
 }
-int Controller::check(int i, int j, int dir, bool is_playerone) {
+bool Controller::is_Continue(bool is_playerone) {
         std::vector<std::vector<std::string>> arr = insModel_->getArray();
         int size = insModel_->getSize();
-        int count = 0;
-        while (1) {
-                std::tuple<int, int> result = is_Reverse(i, j, dir);
-                i = std::get<0>(result);
-                j = std::get<1>(result);
-                if (i < 0 || j < 0 || i >= size || j >= size) return 0;
-                if (arr[i][j] == "O") return 0;
-                if (is_playerone) {
-                        if (arr[i][j] == "B") {
-                                count++;
-                        } else if (arr[i][j] == "W" && count != 0) {
-                                return count;
+        bool ret;
+        for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                        if (arr[i][j] == "O") {
+                                ret = is_Possible(i, j, is_playerone, true);
+                                if (ret) {
+                                        return true;
+                                }
                         }
-                } else {
-                        if (arr[i][j] == "W") count++;
-                        else if (arr[i][j] == "B" && count != 0) return count;
                 }
         }
-        return 0;
+        return false;
 }
 bool Controller::is_Possible(int i, int j, bool is_playerone, bool is_con) {
         std::vector<std::vector<std::string>> arr = insModel_->getArray();
@@ -188,18 +181,36 @@ bool Controller::is_Possible(int i, int j, bool is_playerone, bool is_con) {
         }
         return is_reverse;
 }
-
-void Controller::Reverse(int i, int j, int count, int dir, bool is_playerone) {
+int Controller::check(int i, int j, int dir, bool is_playerone) {
         std::vector<std::vector<std::string>> arr = insModel_->getArray();
         int size = insModel_->getSize();
-        int reverse = 0;
-        while (reverse < count) {
+        int count = 0;
+        while (1) {
                 std::tuple<int, int> result = is_Reverse(i, j, dir);
                 i = std::get<0>(result);
                 j = std::get<1>(result);
-                insModel_->modifyArray(i, j);
-                reverse++;
+                if (i < 0 || j < 0 || i >= size || j >= size) return 0;
+                if (arr[i][j] == "O") return 0;
+                if (is_playerone) {
+                        if (arr[i][j] == "B") {
+                                count++;
+                        } else if (arr[i][j] == "W" && count != 0) {
+                                return count;
+                        } else if (arr[i][j] == "W") {
+                                return 0;
+                        }
+
+                } else {
+                        if (arr[i][j] == "W") {
+                                count++;
+                        } else if (arr[i][j] == "B" && count != 0) {
+                                return count;
+                        } else if (arr[i][j] == "B") {
+                                return 0;
+                        }
+                }
         }
+        return 0;
 }
 std::tuple<int, int> Controller::is_Reverse(int i, int j, int dir) {
         switch (dir) {
@@ -244,23 +255,18 @@ std::tuple<int, int> Controller::is_Reverse(int i, int j, int dir) {
                 }
         return {i, j};
 }
-bool Controller::is_Continue(bool is_playerone) {
+void Controller::Reverse(int i, int j, int count, int dir, bool is_playerone) {
         std::vector<std::vector<std::string>> arr = insModel_->getArray();
         int size = insModel_->getSize();
-        bool ret;
-        for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                        if (arr[i][j] == "O") {
-                                ret = is_Possible(i, j, is_playerone, true);
-                                if (ret) {
-                                        return true;
-                                }
-                        }
-                }
+        int reverse = 0;
+        while (reverse < count) {
+                std::tuple<int, int> result = is_Reverse(i, j, dir);
+                i = std::get<0>(result);
+                j = std::get<1>(result);
+                insModel_->modifyArray(i, j);
+                reverse++;
         }
-        return false;
 }
-
 bool Controller::is_End() {
         std::vector<std::vector<std::string>> arr = insModel_->getArray();
         int size = insModel_->getSize();

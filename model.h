@@ -1,8 +1,8 @@
 /*!
  *     Copyright:  Copyright (c) 2021, HeeSeung.me
  */
-#ifndef DESKTOP_OTHELLO_MODEL_H_
-#define DESKTOP_OTHELLO_MODEL_H_
+#ifndef DESKTOP_OBJECT_ORIENTED_DESIGN_OTHELLO_MODEL_H_
+#define DESKTOP_OBJECT_ORIENTED_DESIGN_OTHELLO_MODEL_H_
 #include <vector>
 #include <string>
 #include "controller.h"
@@ -18,4 +18,4 @@ class Model {
          std::vector<std::vector<std::string>> arr_;
          int size_;
 };
-#endif  // DESKTOP_OTHELLO_MODEL_H_
+#endif  // DESKTOP_OBJECT_ORIENTED_DESIGN_OTHELLO_MODEL_H_
